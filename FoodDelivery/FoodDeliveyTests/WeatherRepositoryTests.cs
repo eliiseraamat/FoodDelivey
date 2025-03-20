@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDeliveyTests;
 
+/// <summary>
+/// Unit tests for the WeatherRepository class.
+/// </summary>
 public class WeatherRepositoryTests
 {
     private async Task<AppDbContext> GetDatabaseContext()

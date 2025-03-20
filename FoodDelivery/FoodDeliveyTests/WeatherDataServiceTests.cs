@@ -7,6 +7,9 @@ using Services;
 
 namespace FoodDeliveyTests;
 
+/// <summary>
+/// Unit tests for the WeatherDataService class.
+/// </summary>
 public class WeatherDataServiceTests
 {
     private readonly Mock<IWeatherRepository> _mockWeatherRepo = new();

@@ -9,7 +9,7 @@ namespace Services;
 /// </summary>
 /// <param name="weatherRepository">Repository to store weather data.</param>
 /// <param name="httpClient">HTTP client for making API requests.</param>
-public class WeatherDataService(IWeatherRepository weatherRepository, HttpClient httpClient)
+public class WeatherDataService(IWeatherRepository weatherRepository, HttpClient httpClient) : IWeatherDataService
 {
     private const string WeatherApiUrl = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 

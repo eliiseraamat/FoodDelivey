@@ -6,6 +6,9 @@ using WebApi.Controllers;
 
 namespace FoodDeliveyTests;
 
+/// <summary>
+/// Unit tests for the DeliveryFeeController class.
+/// </summary>
 public class DeliveryFeeControllerTests
 {
     /// <summary>

@@ -10,8 +10,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddHttpClient(); 
-
 builder.Services.AddScoped<WeatherDataService>();
+builder.Services.AddSingleton<Func<DateTime>>(() => DateTime.UtcNow);
 builder.Services.AddHostedService<WeatherDataCronJob>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 builder.Services.AddScoped<IDeliveryFeeService, DeliveryFeeService>();

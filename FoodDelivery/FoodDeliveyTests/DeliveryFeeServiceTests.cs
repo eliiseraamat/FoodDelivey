@@ -5,6 +5,9 @@ using Services;
 
 namespace FoodDeliveyTests;
 
+/// <summary>
+/// Unit tests for the DeliveryFeeService class.
+/// </summary>
 public class DeliveryFeeServiceTests
 {
     /// <summary>
