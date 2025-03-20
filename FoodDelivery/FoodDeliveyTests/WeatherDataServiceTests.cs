@@ -53,7 +53,7 @@ public class WeatherDataServiceTests
         
         await service.FetchAndStoreWeatherData();
         
-        _mockWeatherRepo.Verify(repo => repo.AddWeatherDataAsync(It.Is<List<WeatherData>>(list =>
+        _mockWeatherRepo.Verify(repo => repo.AddWeatherData(It.Is<List<WeatherData>>(list =>
             list.Count == 2 &&
             list.Any(d => d.StationName == "Tallinn-Harku" && d.Temperature == 5 && d.WindSpeed == 3.2) &&
             list.Any(d => d.StationName == "Tartu-Tõravere" && d.Temperature == 3.1 && d.WindSpeed == 2.8)
@@ -83,7 +83,7 @@ public class WeatherDataServiceTests
         
         await service.FetchAndStoreWeatherData();
         
-        _mockWeatherRepo.Verify(repo => repo.AddWeatherDataAsync(It.IsAny<List<WeatherData>>()), Times.Never);
+        _mockWeatherRepo.Verify(repo => repo.AddWeatherData(It.IsAny<List<WeatherData>>()), Times.Never);
     }
 
     /// <summary>
@@ -108,6 +108,6 @@ public class WeatherDataServiceTests
         var service = new WeatherDataService(_mockWeatherRepo.Object, httpClient);
         
         await service.FetchAndStoreWeatherData();
-        _mockWeatherRepo.Verify(repo => repo.AddWeatherDataAsync(It.IsAny<List<WeatherData>>()), Times.Never);
+        _mockWeatherRepo.Verify(repo => repo.AddWeatherData(It.IsAny<List<WeatherData>>()), Times.Never);
     }
 }

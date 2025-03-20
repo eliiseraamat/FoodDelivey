@@ -24,7 +24,7 @@ public class WeatherRepositoryTests
     /// Tests that when a city exists, the latest weather data is returned.
     /// </summary>
     [Fact]
-    public async Task GetLatestWeatherByCityAsync_CityExists_ReturnsLatestWeatherData()
+    public async Task GetLatestWeatherByCity_CityExists_ReturnsLatestWeatherData()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
@@ -38,7 +38,7 @@ public class WeatherRepositoryTests
         await dbContext.WeatherData.AddRangeAsync(weatherDataList);
         await dbContext.SaveChangesAsync();
         
-        var result = await repository.GetLatestWeatherByCityAsync("Tallinn");
+        var result = await repository.GetLatestWeatherByCity("Tallinn");
         
         Assert.NotNull(result);
         Assert.Equal("1345", result.WMOCode);
@@ -48,12 +48,12 @@ public class WeatherRepositoryTests
     /// Tests that when a city does not exist, null is returned.
     /// </summary>
     [Fact]
-    public async Task GetLatestWeatherByCityAsync_CityDoesNotExist_ReturnsNull()
+    public async Task GetLatestWeatherByCity_CityDoesNotExist_ReturnsNull()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
         
-        var result = await repository.GetLatestWeatherByCityAsync("Tartu");
+        var result = await repository.GetLatestWeatherByCity("Tartu");
         
         Assert.Null(result);
     }
@@ -62,7 +62,7 @@ public class WeatherRepositoryTests
     /// Tests that when a city does not exist, null is returned.
     /// </summary>
     [Fact]
-    public async Task AddWeatherDataAsync_ValidData_SavesToDatabase()
+    public async Task AddWeatherData_ValidData_SavesToDatabase()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
@@ -72,10 +72,48 @@ public class WeatherRepositoryTests
             new() { StationName = "Tartu-Tõravere", WMOCode = "1244", Temperature = 10, WindSpeed = 2, Phenomenon = "Cloudy", Time = DateTime.UtcNow }
         };
         
-        await repository.AddWeatherDataAsync(weatherData);
+        await repository.AddWeatherData(weatherData);
         
         var result = await dbContext.WeatherData.FirstOrDefaultAsync(w => w.StationName == "Tartu-Tõravere");
         Assert.NotNull(result);
         Assert.Equal("1244", result.WMOCode);
+    }
+    
+    /// <summary>
+    /// Tests that when a city exists and there is weather data available for the specified time, then the right data is returned.
+    /// </summary>
+    [Fact]
+    public async Task GetLatestWeatherByCityAndTime_ReturnsCorrectWeatherData()
+    {
+        var dbContext = await GetDatabaseContext();
+        var repository = new WeatherRepository(dbContext);
+
+        var weatherData = new List<WeatherData>
+        {
+            new() { StationName = "Tartu-Tõravere", WMOCode = "1244", Temperature = 10, WindSpeed = 2, Phenomenon = "Cloudy", Time = new DateTime(2024, 03, 20, 14, 15, 0) },
+            new() { StationName = "Tartu-Tõravere", WMOCode = "1244", Temperature = 10, WindSpeed = 2, Phenomenon = "Cloudy", Time = new DateTime(2024, 03, 20, 14, 45, 0) }
+        };
+        
+        await repository.AddWeatherData(weatherData);
+        
+        var time = new DateTime(2024, 03, 20, 14, 30, 0);
+        var result = await repository.GetLatestWeatherByCityAndTime("tartu", time);
+        Assert.NotNull(result);
+        Assert.Equal(new DateTime(2024, 03, 20, 14, 15, 0), result.Time);
+    }
+    
+    /// <summary>
+    /// Tests that when a city exists and there is no weather data available for the specified time, then null is returned.
+    /// </summary>
+    [Fact]
+    public async Task GetLatestWeatherByCityAndTime_ReturnsNullIfNoData()
+    {
+        var dbContext = await GetDatabaseContext();
+        var repository = new WeatherRepository(dbContext);
+        
+        var time = new DateTime(2024, 03, 20, 14, 30, 0);
+        var result = await repository.GetLatestWeatherByCityAndTime("tallinn", time);
+        
+        Assert.Null(result);
     }
 }

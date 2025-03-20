@@ -17,13 +17,14 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
     /// </summary>
     /// <param name="city">The city where delivery is requested.</param>
     /// <param name="vehicleType">The type of vehicle used for delivery.</param>
+    /// <param name="time">Optional date and time for which to calculate the fee. If not provided, current time is used.</param>
     /// <returns>
     /// Returns an HTTP 200 response with the calculated delivery fee if successful.
     /// Returns an HTTP 400 response if the request parameters are invalid or if the selected vehicle type is forbidden.
     /// Returns an HTTP 500 response in case of an internal server error.
     /// </returns>
     [HttpGet]
-    public async Task<IActionResult> GetDeliveryFee([FromQuery] string city, [FromQuery] string vehicleType)
+    public async Task<IActionResult> GetDeliveryFee([FromQuery] string city, [FromQuery] string vehicleType, [FromQuery] string? time)
     {
         if (string.IsNullOrEmpty(city) || string.IsNullOrEmpty(vehicleType) || 
             !Enum.GetNames<Cities>().Contains(city, StringComparer.OrdinalIgnoreCase) || !Enum.GetNames<VehicleTypes>().Contains(vehicleType, StringComparer.OrdinalIgnoreCase))
@@ -35,12 +36,30 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
         {
             Enum.TryParse(city, true, out Cities cityEnum);
             Enum.TryParse(vehicleType, true, out VehicleTypes vehicleEnum);
-            var fee = await deliveryFeeService.CalculateFeeAsync(cityEnum, vehicleEnum);
-            if (fee == -1)
+            DateTime? dateTime = null;
+
+            if (!string.IsNullOrEmpty(time))
             {
-                return BadRequest(new { Error = "Usage of selected vehicle type is forbidden" });
+                if (DateTime.TryParse(time, out var parsedDateTime))
+                {
+                    dateTime = parsedDateTime;
+                }
+                else
+                {
+                    return BadRequest(new { Error = "Invalid time format." });
+                }
             }
-            return Ok(new { TotalFee = fee });
+            else
+            {
+                dateTime = DateTime.UtcNow;
+            }
+            var fee = await deliveryFeeService.CalculateFee(cityEnum, vehicleEnum, dateTime);
+            return fee switch
+            {
+                -1 => BadRequest(new { Error = "Usage of selected vehicle type is forbidden" }),
+                -2 => BadRequest(new { Error = "No weather information provided on selected time" }),
+                _ => Ok(new { TotalFee = fee })
+            };
         }
         catch (Exception ex)
         {

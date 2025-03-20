@@ -16,7 +16,7 @@ public class WeatherRepository(AppDbContext context) : IWeatherRepository
     /// <returns>
     /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
     /// </returns>
-    public async Task<WeatherData?> GetLatestWeatherByCityAsync(string city)
+    public async Task<WeatherData?> GetLatestWeatherByCity(string city)
     {
         return await context.WeatherData
             .Where(w => w.StationName.ToLower().Contains(city.ToLower()))
@@ -29,9 +29,32 @@ public class WeatherRepository(AppDbContext context) : IWeatherRepository
     /// </summary>
     /// <param name="weatherData">A list of weather data entries to be saved.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task AddWeatherDataAsync(List<WeatherData> weatherData)
+    public async Task AddWeatherData(List<WeatherData> weatherData)
     {
         await context.WeatherData.AddRangeAsync(weatherData);
         await context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Retrieves the latest weather data for a specified city and date-time.
+    /// </summary>
+    /// <param name="city">The name of the city for which to fetch the weather data.</param>
+    /// <param name="time">The specific date and time to match against weather data entries.</param>
+    /// <returns>
+    /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
+    /// </returns>
+    public async Task<WeatherData?> GetLatestWeatherByCityAndTime(string city, DateTime time)
+    {
+        var weatherData = await context.WeatherData
+            .Where(w => w.StationName.ToLower().Contains(city.ToLower()) && w.Time.Date <= time.Date && w.Time <= time)
+            .ToListAsync();
+        
+        if (weatherData.Count != 0)
+        {
+            return weatherData
+                .OrderBy(w => Math.Abs((w.Time - time).TotalMinutes))
+                .FirstOrDefault();
+        }
+        return null; 
     }
 }
