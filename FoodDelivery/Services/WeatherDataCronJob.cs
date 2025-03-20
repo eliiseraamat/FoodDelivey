@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Services;
 
@@ -11,6 +12,11 @@ namespace Services;
 public class WeatherDataCronJob(IServiceProvider serviceProvider, Func<DateTime> getCurrentTime) : BackgroundService
 {
     /// <summary>
+    /// Defines how often the job runs (in minutes).
+    /// </summary>
+    public static int UpdateIntervalMinutes { get; set; } = 60; 
+    
+    /// <summary>
     /// Executes the background job that fetches weather data every hour at 15 minutes past the hour.
     /// </summary>
     /// <param name="stoppingToken">A token to signal cancellation of the background task.</param>
@@ -20,14 +26,30 @@ public class WeatherDataCronJob(IServiceProvider serviceProvider, Func<DateTime>
         while (!stoppingToken.IsCancellationRequested)
         {
             var now = getCurrentTime();
-            if (now.Minute == 15)
+
+            if (UpdateIntervalMinutes == 60)
             {
-                using var scope = serviceProvider.CreateScope();
-                var weatherService = scope.ServiceProvider.GetRequiredService<IWeatherDataService>();
-                await weatherService.FetchAndStoreWeatherData();
+                if (now.Minute == 15)
+                {
+                    await FetchWeatherData();
+                }
+            }
+            else
+            {
+                if (now.Minute % UpdateIntervalMinutes == 0)
+                {
+                    await FetchWeatherData();
+                }
             }
 
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
+    }
+    
+    private async Task FetchWeatherData()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var weatherService = scope.ServiceProvider.GetRequiredService<IWeatherDataService>();
+        await weatherService.FetchAndStoreWeatherData();
     }
 }

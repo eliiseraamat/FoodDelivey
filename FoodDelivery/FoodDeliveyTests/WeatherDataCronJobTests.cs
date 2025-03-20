@@ -68,4 +68,34 @@ public class WeatherDataCronJobTests
         
         mockWeatherService.Verify(service => service.FetchAndStoreWeatherData(), Times.Never());
     }
+    
+    /// <summary>
+    /// Tests that changing the update interval makes the cron job fetch more frequently.
+    /// </summary>
+    [Fact]
+    public async Task ExecuteAsync_CallsFetch_MoreFrequently_WhenIntervalChanged()
+    {
+        var mockWeatherService = new Mock<IWeatherDataService>();
+        mockWeatherService
+            .Setup(service => service.FetchAndStoreWeatherData())
+            .Returns(Task.CompletedTask);
+
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton(mockWeatherService.Object)
+            .BuildServiceProvider();
+        
+        WeatherDataCronJob.UpdateIntervalMinutes = 1;
+
+        var cronJob = new WeatherDataCronJob(serviceProvider, () => DateTime.UtcNow);
+        
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(130));
+        
+        await cronJob.StartAsync(cts.Token);
+        
+        await Task.Delay(TimeSpan.FromSeconds(125), cts.Token);
+        
+        await cts.CancelAsync();
+        
+        mockWeatherService.Verify(service => service.FetchAndStoreWeatherData(), Times.AtLeast(2));
+    }
 }
