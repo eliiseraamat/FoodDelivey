@@ -13,7 +13,7 @@ public class WeatherDataCronJobTests
     /// Tests that the cron job calls FetchAndStoreWeatherData when the time is exactly 15 minutes past the hour.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_CallsFetchAndStoreWeatherData_WhenTimeIs15MinutesPastHour()
+    public async Task ExecuteAsync_CallsFetchAndStoreWeatherData()
     {
         var mockWeatherService = new Mock<IWeatherDataService>();
         mockWeatherService
@@ -73,7 +73,7 @@ public class WeatherDataCronJobTests
     /// Tests that changing the update interval makes the cron job fetch more frequently.
     /// </summary>
     [Fact]
-    public async Task ExecuteAsync_CallsFetch_MoreFrequently_WhenIntervalChanged()
+    public async Task ExecuteAsync_IntervalChanged()
     {
         var mockWeatherService = new Mock<IWeatherDataService>();
         mockWeatherService

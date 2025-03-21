@@ -13,12 +13,13 @@ namespace FoodDeliveyTests;
 public class WeatherDataServiceTests
 {
     private readonly Mock<IWeatherRepository> _mockWeatherRepo = new();
+    private const double Tolerance = 0.01;
 
     /// <summary>
     /// Tests that valid weather data is correctly fetched and saved to the repository.
     /// </summary>
     [Fact]
-    public async Task FetchAndStoreWeatherData_ValidResponse_SavesDataToRepository()
+    public async Task FetchAndStoreWeatherData_ValidResponse()
     {
         const string xmlResponse = @"
             <observations>
@@ -55,8 +56,8 @@ public class WeatherDataServiceTests
         
         _mockWeatherRepo.Verify(repo => repo.AddWeatherData(It.Is<List<WeatherData>>(list =>
             list.Count == 2 &&
-            list.Any(d => d.StationName == "Tallinn-Harku" && d.Temperature == 5 && d.WindSpeed == 3.2) &&
-            list.Any(d => d.StationName == "Tartu-Tõravere" && d.Temperature == 3.1 && d.WindSpeed == 2.8)
+            list.Any(d => d.StationName == "Tallinn-Harku" && Math.Abs(d.Temperature - 5.0) < Tolerance && Math.Abs(d.WindSpeed - 3.2) < Tolerance) &&
+            list.Any(d => d.StationName == "Tartu-Tõravere" && Math.Abs(d.Temperature - 3.1) < Tolerance && Math.Abs(d.WindSpeed - 2.8) < Tolerance)
         )), Times.Once);
     }
 
@@ -64,7 +65,7 @@ public class WeatherDataServiceTests
     /// Tests that if an empty response is received, no data is saved to the repository.
     /// </summary>
     [Fact]
-    public async Task FetchAndStoreWeatherData_EmptyResponse_DoesNotSaveData()
+    public async Task FetchAndStoreWeatherData_EmptyResponse()
     {
         var xmlResponse = "<response><station></station></response>";
 
@@ -90,7 +91,7 @@ public class WeatherDataServiceTests
     /// Tests that an invalid XML response does not crash the service.
     /// </summary>
     [Fact]
-    public async Task FetchAndStoreWeatherData_InvalidXml_DoesNotCrash()
+    public async Task FetchAndStoreWeatherData_InvalidXml()
     {
         var invalidXml = "<invalid><data></data>";
 

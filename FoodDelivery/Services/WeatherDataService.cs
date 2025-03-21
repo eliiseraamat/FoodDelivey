@@ -16,7 +16,7 @@ public class WeatherDataService(IWeatherRepository weatherRepository, HttpClient
     private static readonly string[] Stations = ["Tallinn-Harku", "Tartu-Tõravere", "Pärnu"];
 
     /// <summary>
-    /// Fetches weather data from Ilmateenistus and updates the database with the latest observations.
+    /// Fetches data from the weather portal of the Estonian Environment Agency and updates the database with the latest observations.
     /// </summary>
     public async Task FetchAndStoreWeatherData()
     {
@@ -26,14 +26,14 @@ public class WeatherDataService(IWeatherRepository weatherRepository, HttpClient
 
             var xml = XDocument.Parse(response);
             var observations = xml.Descendants("station")
-                .Where(st => Stations.Contains(st.Element("name")!.Value))
-                .Select(st => new Domain.WeatherData
+                .Where(s => Stations.Contains(s.Element("name")!.Value))
+                .Select(s => new Domain.WeatherData
                 {
-                    StationName = st.Element("name")!.Value,
-                    WMOCode = st.Element("wmocode")!.Value,
-                    Temperature = double.TryParse(st.Element("airtemperature")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var temp) ? temp : 1,
-                    WindSpeed = double.TryParse(st.Element("windspeed")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var wind) ? wind : 0,
-                    Phenomenon = st.Element("phenomenon")?.Value ?? "None",
+                    StationName = s.Element("name")!.Value,
+                    WMOCode = s.Element("wmocode")!.Value,
+                    Temperature = double.TryParse(s.Element("airtemperature")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var temp) ? temp : 1,
+                    WindSpeed = double.TryParse(s.Element("windspeed")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var wind) ? wind : 0,
+                    Phenomenon = s.Element("phenomenon")?.Value ?? "None",
                     Time = DateTime.UtcNow,
                 })
                 .ToList();

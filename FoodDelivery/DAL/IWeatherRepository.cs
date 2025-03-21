@@ -17,7 +17,7 @@ public interface IWeatherRepository
     Task<WeatherData?> GetLatestWeatherByCity(string city);
     
     /// <summary>
-    /// Retrieves the latest weather data for a specified city and date-time.
+    /// Retrieves the weather data for a specified city and time.
     /// </summary>
     /// <param name="city">The name of the city for which to fetch the weather data.</param>
     /// <param name="time">The specific date and time to match against weather data entries.</param>

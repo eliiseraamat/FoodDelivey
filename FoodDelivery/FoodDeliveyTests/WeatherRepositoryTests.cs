@@ -9,7 +9,7 @@ namespace FoodDeliveyTests;
 /// </summary>
 public class WeatherRepositoryTests
 {
-    private async Task<AppDbContext> GetDatabaseContext()
+    private static async Task<AppDbContext> GetDatabaseContext()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -24,7 +24,7 @@ public class WeatherRepositoryTests
     /// Tests that when a city exists, the latest weather data is returned.
     /// </summary>
     [Fact]
-    public async Task GetLatestWeatherByCity_CityExists_ReturnsLatestWeatherData()
+    public async Task GetLatestWeatherByCity_CityExists()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
@@ -48,7 +48,7 @@ public class WeatherRepositoryTests
     /// Tests that when a city does not exist, null is returned.
     /// </summary>
     [Fact]
-    public async Task GetLatestWeatherByCity_CityDoesNotExist_ReturnsNull()
+    public async Task GetLatestWeatherByCity_CityDoesNotExist()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
@@ -59,10 +59,10 @@ public class WeatherRepositoryTests
     }
 
     /// <summary>
-    /// Tests that when a city does not exist, null is returned.
+    /// Tests that when there is valid data the weather data is saved.
     /// </summary>
     [Fact]
-    public async Task AddWeatherData_ValidData_SavesToDatabase()
+    public async Task AddWeatherData_ValidData()
     {
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);

@@ -7,4 +7,3 @@ dotnet ef database --project DAL --startup-project WebApi update
 dotnet ef database --project DAL --startup-project WebApi drop
 
 dotnet run --project WebApi
-

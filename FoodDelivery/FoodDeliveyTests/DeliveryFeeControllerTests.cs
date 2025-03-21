@@ -12,10 +12,10 @@ namespace FoodDeliveyTests;
 public class DeliveryFeeControllerTests
 {
     /// <summary>
-    /// Test to verify that if an invalid city or vehicle type is provided, a BadRequest result is returned.
+    /// Test to verify that if an invalid city or vehicle type is provided, a BadRequest result is returned with correct message.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_InvalidCityOrVehicle_ReturnsBadRequest()
+    public async Task GetDeliveryFee_InvalidCityOrVehicle()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         var controller = new DeliveryFeeController(mockService.Object);
@@ -31,10 +31,10 @@ public class DeliveryFeeControllerTests
     }
     
     /// <summary>
-    /// Test to verify that if an forbidden city or vehicle type is provided, a BadRequest result is returned.
+    /// Test to verify that if an forbidden vehicle type is provided, a BadRequest result is returned with correct message.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_ForbiddenCityOrVehicle_ReturnsBadRequest()
+    public async Task GetDeliveryFee_ForbiddenVehicle()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
@@ -57,7 +57,7 @@ public class DeliveryFeeControllerTests
     /// Test to check that a valid request returns an OK result with the correct delivery fee.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_ValidRequest_ReturnsOkWithFee()
+    public async Task GetDeliveryFee_ValidRequest()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
@@ -81,7 +81,7 @@ public class DeliveryFeeControllerTests
     /// Test to verify that if an internal server error occurs, a 500 status code and error message are returned.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_InternalServerError_Returns500()
+    public async Task GetDeliveryFee_InternalServerError()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
@@ -106,7 +106,7 @@ public class DeliveryFeeControllerTests
     /// Test to check that a valid request with a DateTime parameter returns an OK result with the correct delivery fee.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_ValidRequestWithDateTime_ReturnsOkWithFee()
+    public async Task GetDeliveryFee_ValidRequestWithDateTime()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         var requestTime = new DateTime(2024, 03, 20, 14, 30, 0); // Simulating the time the request is made
@@ -130,10 +130,10 @@ public class DeliveryFeeControllerTests
     }
     
     /// <summary>
-    /// Test to check that if an invalid DateTime is provided, the controller returns a BadRequest.
+    /// Test to check that if an invalid DateTime is provided, the controller returns a BadRequest with correct message.
     /// </summary>
     [Fact]
-    public async Task GetDeliveryFee_InvalidDateTime_ReturnsBadRequest()
+    public async Task GetDeliveryFee_InvalidDateTime()
     {
         var mockService = new Mock<IDeliveryFeeService>();
         

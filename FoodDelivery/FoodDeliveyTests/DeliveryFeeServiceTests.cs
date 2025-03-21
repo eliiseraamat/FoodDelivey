@@ -50,7 +50,7 @@ public class DeliveryFeeServiceTests
     /// Test to check that snowy weather adds an extra fee to the delivery cost.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_SnowyWeather_AddsExtraFee()
+    public async Task CalculateFeeAsync_SnowyWeather()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -68,7 +68,7 @@ public class DeliveryFeeServiceTests
     /// Test to check that rainy weather adds an extra fee to the delivery cost.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_RainyWeather_AddsExtraFee()
+    public async Task CalculateFeeAsync_RainyWeather()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -79,14 +79,14 @@ public class DeliveryFeeServiceTests
         
         var result = await service.CalculateFee(Cities.Pärnu, VehicleTypes.Scooter, null);
         
-        Assert.Equal(4.5m, result);
+        Assert.Equal(3, result);
     }
 
     /// <summary>
     /// Test to verify that severe weather results in a -1 fee indicating invalid conditions.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_SevereWeather_ReturnsNegativeOne()
+    public async Task CalculateFeeAsync_SevereWeather()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -104,7 +104,7 @@ public class DeliveryFeeServiceTests
     /// Test to check that for cars, weather phenomenon does not add any extra fee.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_SevereWeatherCar_NoExtraFee()
+    public async Task CalculateFeeAsync_SevereWeatherCar()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -122,7 +122,7 @@ public class DeliveryFeeServiceTests
     /// Test to verify that an average wind speed increases the delivery fee for bikes.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_AverageWindSpeed_AddsExtraFee()
+    public async Task CalculateFeeAsync_AverageWindSpeed()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -140,7 +140,7 @@ public class DeliveryFeeServiceTests
     /// Test to verify that an wind speed does not affect the fee for scooters and cars.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_AverageWindSpeedScooter_NoExtraFee()
+    public async Task CalculateFeeAsync_AverageWindSpeedScooter()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -158,7 +158,7 @@ public class DeliveryFeeServiceTests
     /// Test to check that a high wind speed for bikes results in a negative fee (invalid conditions).
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_HighWindSpeedScooter_ReturnsNegativeOne()
+    public async Task CalculateFeeAsync_HighWindSpeedBike()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -176,7 +176,7 @@ public class DeliveryFeeServiceTests
     /// Test to verify that a air temperature does not add extra fees for cars.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_AirTemperatureCar_NoExtraFee()
+    public async Task CalculateFeeAsync_AirTemperatureCar()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -194,7 +194,7 @@ public class DeliveryFeeServiceTests
     /// Test to verify that a low air temperature adds an extra fee for bikes and scooters.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_LowAirTemperature_AddsExtraFee()
+    public async Task CalculateFeeAsync_LowAirTemperature()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -209,10 +209,10 @@ public class DeliveryFeeServiceTests
     }
     
     /// <summary>
-    /// Test to check that extremely low air temperatures results in an invalid fee for cars and scooters.
+    /// Test to check that extremely low air temperatures results in an invalid fee for bikes and scooters.
     /// </summary>
     [Fact]
-    public async Task CalculateFeeAsync_ExtraLowAirTemperature_ReturnsNegativeOne()
+    public async Task CalculateFeeAsync_ExtraLowAirTemperature()
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
@@ -242,5 +242,26 @@ public class DeliveryFeeServiceTests
         var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Bike, null);
         
         Assert.Equal(4, result);
+    }
+    
+    /// <summary>
+    /// Test to check that no weather data for selected time results a negative fee.
+    /// </summary>
+    [Fact]
+    public async Task CalculateFee_NoWeatherDataForSelectedTime()
+    {
+        var mockWeatherRepo = new Mock<IWeatherRepository>();
+        
+        var testTime = new DateTime(2024, 01, 01, 12, 00, 00);
+        
+        mockWeatherRepo
+            .Setup(repo => repo.GetLatestWeatherByCityAndTime(Cities.Tallinn.ToString(), testTime))
+            .ReturnsAsync((WeatherData?)null);
+
+        var service = new DeliveryFeeService(mockWeatherRepo.Object);
+        
+        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Bike, testTime);
+        
+        Assert.Equal(-2, result);
     }
 }

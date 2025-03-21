@@ -20,7 +20,10 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
     /// <param name="time">Optional date and time for which to calculate the fee. If not provided, current time is used.</param>
     /// <returns>
     /// Returns an HTTP 200 response with the calculated delivery fee if successful.
-    /// Returns an HTTP 400 response if the request parameters are invalid or if the selected vehicle type is forbidden.
+    /// Returns an HTTP 400 response if:
+    /// - the request parameters are invalid
+    /// - the selected vehicle type is forbidden
+    /// - there is no weather data available for the selected time.
     /// Returns an HTTP 500 response in case of an internal server error.
     /// </returns>
     [HttpGet]
@@ -36,7 +39,7 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
         {
             Enum.TryParse(city, true, out Cities cityEnum);
             Enum.TryParse(vehicleType, true, out VehicleTypes vehicleEnum);
-            DateTime? dateTime = null;
+            DateTime? dateTime;
 
             if (!string.IsNullOrEmpty(time))
             {
@@ -57,7 +60,7 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
             return fee switch
             {
                 -1 => BadRequest(new { Error = "Usage of selected vehicle type is forbidden" }),
-                -2 => BadRequest(new { Error = "No weather information provided on selected time" }),
+                -2 => BadRequest(new { Error = "No weather data available for the selected time." }),
                 _ => Ok(new { TotalFee = fee })
             };
         }

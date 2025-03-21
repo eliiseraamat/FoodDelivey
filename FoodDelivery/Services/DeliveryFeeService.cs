@@ -103,7 +103,7 @@ public class DeliveryFeeService(IWeatherRepository weatherRepository) : IDeliver
 
         if (weatherPhenomenon.Contains("rain"))
         {
-            return 2;
+            return 0.5m;
         }
 
         if (weatherPhenomenon == "glaze" || weatherPhenomenon == "hail" ||
