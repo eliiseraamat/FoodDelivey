@@ -17,18 +17,18 @@ public class DeliveryFeeService(IWeatherRepository weatherRepository) : IDeliver
     /// <param name="vehicleType">The type of vehicle used for delivery.</param>
     /// <param name="dateTime">Optional date and time for which to calculate the fee.</param>
     /// <returns>The total delivery fee or -1 if the delivery is not possible.</returns>
-    public async Task<decimal> CalculateFee(Cities city, VehicleTypes vehicleType, DateTime? dateTime)
+    public async Task<decimal> CalculateFeeAsync(Cities city, VehicleTypes vehicleType, DateTime? dateTime)
     {
         var cityString = Enum.GetName(city);
         WeatherData? weatherData;
         if (dateTime != null)
         {
-            weatherData = await weatherRepository.GetLatestWeatherByCityAndTime(cityString!, dateTime.Value);
+            weatherData = await weatherRepository.GetLatestWeatherByCityAndTimeAsync(cityString!, dateTime.Value);
             if (weatherData == null) return -2;
         }
         else
         {
-            weatherData = await weatherRepository.GetLatestWeatherByCity(cityString!);
+            weatherData = await weatherRepository.GetLatestWeatherByCityAsync(cityString!);
         }
         if (weatherData == null) return -1;
         var extraFee = CalculateExtraFee(vehicleType, weatherData);

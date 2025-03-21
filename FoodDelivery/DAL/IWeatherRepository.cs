@@ -14,7 +14,7 @@ public interface IWeatherRepository
     /// <returns>
     /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
     /// </returns>
-    Task<WeatherData?> GetLatestWeatherByCity(string city);
+    Task<WeatherData?> GetLatestWeatherByCityAsync(string city);
     
     /// <summary>
     /// Retrieves the weather data for a specified city and time.
@@ -24,12 +24,12 @@ public interface IWeatherRepository
     /// <returns>
     /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
     /// </returns>
-    Task<WeatherData?> GetLatestWeatherByCityAndTime(string city, DateTime time);
+    Task<WeatherData?> GetLatestWeatherByCityAndTimeAsync(string city, DateTime time);
     
     /// <summary>
     /// Adds list of weather data entries to the database.
     /// </summary>
     /// <param name="weatherData">A list of weather data entries to be saved.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddWeatherData(List<WeatherData> weatherData);
+    /// <returns>A task representing the asynchronou    s operation.</returns>
+    Task AddWeatherDataAsync(List<WeatherData> weatherData);
 }

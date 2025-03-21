@@ -56,7 +56,7 @@ public class DeliveryFeeController(IDeliveryFeeService deliveryFeeService) : Con
             {
                 dateTime = DateTime.UtcNow;
             }
-            var fee = await deliveryFeeService.CalculateFee(cityEnum, vehicleEnum, dateTime);
+            var fee = await deliveryFeeService.CalculateFeeAsync(cityEnum, vehicleEnum, dateTime);
             return fee switch
             {
                 -1 => BadRequest(new { Error = "Usage of selected vehicle type is forbidden" }),

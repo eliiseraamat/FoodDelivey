@@ -16,7 +16,7 @@ public class WeatherRepository(AppDbContext context) : IWeatherRepository
     /// <returns>
     /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
     /// </returns>
-    public async Task<WeatherData?> GetLatestWeatherByCity(string city)
+    public async Task<WeatherData?> GetLatestWeatherByCityAsync(string city)
     {
         return await context.WeatherData
             .Where(w => w.StationName.ToLower().Contains(city.ToLower()))
@@ -29,7 +29,7 @@ public class WeatherRepository(AppDbContext context) : IWeatherRepository
     /// </summary>
     /// <param name="weatherData">A list of weather data entries to be saved.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task AddWeatherData(List<WeatherData> weatherData)
+    public async Task AddWeatherDataAsync(List<WeatherData> weatherData)
     {
         await context.WeatherData.AddRangeAsync(weatherData);
         await context.SaveChangesAsync();
@@ -43,7 +43,7 @@ public class WeatherRepository(AppDbContext context) : IWeatherRepository
     /// <returns>
     /// The latest <see cref="WeatherData"/> entry for the given city, or null if no data is found.
     /// </returns>
-    public async Task<WeatherData?> GetLatestWeatherByCityAndTime(string city, DateTime time)
+    public async Task<WeatherData?> GetLatestWeatherByCityAndTimeAsync(string city, DateTime time)
     {
         var weatherData = await context.WeatherData
             .Where(w => w.StationName.ToLower().Contains(city.ToLower()) && w.Time.Date <= time.Date && w.Time <= time)

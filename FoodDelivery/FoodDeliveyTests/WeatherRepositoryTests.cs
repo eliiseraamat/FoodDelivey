@@ -38,7 +38,7 @@ public class WeatherRepositoryTests
         await dbContext.WeatherData.AddRangeAsync(weatherDataList);
         await dbContext.SaveChangesAsync();
         
-        var result = await repository.GetLatestWeatherByCity("Tallinn");
+        var result = await repository.GetLatestWeatherByCityAsync("Tallinn");
         
         Assert.NotNull(result);
         Assert.Equal("1345", result.WMOCode);
@@ -53,7 +53,7 @@ public class WeatherRepositoryTests
         var dbContext = await GetDatabaseContext();
         var repository = new WeatherRepository(dbContext);
         
-        var result = await repository.GetLatestWeatherByCity("Tartu");
+        var result = await repository.GetLatestWeatherByCityAsync("Tartu");
         
         Assert.Null(result);
     }
@@ -72,7 +72,7 @@ public class WeatherRepositoryTests
             new() { StationName = "Tartu-Tõravere", WMOCode = "1244", Temperature = 10, WindSpeed = 2, Phenomenon = "Cloudy", Time = DateTime.UtcNow }
         };
         
-        await repository.AddWeatherData(weatherData);
+        await repository.AddWeatherDataAsync(weatherData);
         
         var result = await dbContext.WeatherData.FirstOrDefaultAsync(w => w.StationName == "Tartu-Tõravere");
         Assert.NotNull(result);
@@ -94,10 +94,10 @@ public class WeatherRepositoryTests
             new() { StationName = "Tartu-Tõravere", WMOCode = "1244", Temperature = 10, WindSpeed = 2, Phenomenon = "Cloudy", Time = new DateTime(2024, 03, 20, 14, 45, 0) }
         };
         
-        await repository.AddWeatherData(weatherData);
+        await repository.AddWeatherDataAsync(weatherData);
         
         var time = new DateTime(2024, 03, 20, 14, 30, 0);
-        var result = await repository.GetLatestWeatherByCityAndTime("tartu", time);
+        var result = await repository.GetLatestWeatherByCityAndTimeAsync("tartu", time);
         Assert.NotNull(result);
         Assert.Equal(new DateTime(2024, 03, 20, 14, 15, 0), result.Time);
     }
@@ -112,7 +112,7 @@ public class WeatherRepositoryTests
         var repository = new WeatherRepository(dbContext);
         
         var time = new DateTime(2024, 03, 20, 14, 30, 0);
-        var result = await repository.GetLatestWeatherByCityAndTime("tallinn", time);
+        var result = await repository.GetLatestWeatherByCityAndTimeAsync("tallinn", time);
         
         Assert.Null(result);
     }

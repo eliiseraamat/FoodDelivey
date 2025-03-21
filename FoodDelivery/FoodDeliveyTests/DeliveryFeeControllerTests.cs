@@ -38,7 +38,7 @@ public class DeliveryFeeControllerTests
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
-            .Setup(service => service.CalculateFee(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), null))
+            .Setup(service => service.CalculateFeeAsync(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), null))
             .ReturnsAsync(-1); 
         
         var controller = new DeliveryFeeController(mockService.Object);
@@ -61,7 +61,7 @@ public class DeliveryFeeControllerTests
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
-            .Setup(service => service.CalculateFee(Cities.Tallinn, VehicleTypes.Car, null))
+            .Setup(service => service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Car, null))
             .ReturnsAsync(4.0m);
 
         var controller = new DeliveryFeeController(mockService.Object);
@@ -85,7 +85,7 @@ public class DeliveryFeeControllerTests
     {
         var mockService = new Mock<IDeliveryFeeService>();
         mockService
-            .Setup(service => service.CalculateFee(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), null))
+            .Setup(service => service.CalculateFeeAsync(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), null))
             .ThrowsAsync(new Exception("Database error"));
 
         var controller = new DeliveryFeeController(mockService.Object);
@@ -113,7 +113,7 @@ public class DeliveryFeeControllerTests
 
         // Setting up the service to calculate the fee based on a valid request and DateTime
         mockService
-            .Setup(service => service.CalculateFee(Cities.Tallinn, VehicleTypes.Car, requestTime))
+            .Setup(service => service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Car, requestTime))
             .ReturnsAsync(4.0m);
 
         var controller = new DeliveryFeeController(mockService.Object);
@@ -138,7 +138,7 @@ public class DeliveryFeeControllerTests
         var mockService = new Mock<IDeliveryFeeService>();
         
         mockService
-            .Setup(service => service.CalculateFee(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), It.IsAny<DateTime>()))
+            .Setup(service => service.CalculateFeeAsync(It.IsAny<Cities>(), It.IsAny<VehicleTypes>(), It.IsAny<DateTime>()))
             .ThrowsAsync(new ArgumentException("Invalid date time"));
 
         var controller = new DeliveryFeeController(mockService.Object);

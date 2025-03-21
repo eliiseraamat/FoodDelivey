@@ -18,12 +18,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = 5, WindSpeed = 5, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Bike, null);
         
         Assert.Equal(-1, result);
     }
@@ -36,12 +36,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = 5, WindSpeed = 5, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Car, null);
+        var result = await service.CalculateFeeAsync(Cities.Tartu, VehicleTypes.Car, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -54,12 +54,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = 1, WindSpeed = 5, Phenomenon = "Snow" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tartu, VehicleTypes.Bike, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -72,12 +72,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Pärnu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Pärnu"))
             .ReturnsAsync(new WeatherData { Temperature = 5, WindSpeed = 5, Phenomenon = "Rain" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Pärnu, VehicleTypes.Scooter, null);
+        var result = await service.CalculateFeeAsync(Cities.Pärnu, VehicleTypes.Scooter, null);
         
         Assert.Equal(3, result);
     }
@@ -90,12 +90,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tallinn"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tallinn"))
             .ReturnsAsync(new WeatherData { Temperature = 3, WindSpeed = 5, Phenomenon = "Thunder" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Bike, null);
         
         Assert.Equal(-1, result);
     }
@@ -108,12 +108,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tallinn"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tallinn"))
             .ReturnsAsync(new WeatherData { Temperature = 3, WindSpeed = 5, Phenomenon = "Thunder" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Car, null);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Car, null);
         
         Assert.Equal(4, result);
     }
@@ -126,12 +126,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tallinn"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tallinn"))
             .ReturnsAsync(new WeatherData { Temperature = 3, WindSpeed = 15, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Bike, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -144,12 +144,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tallinn"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tallinn"))
             .ReturnsAsync(new WeatherData { Temperature = 3, WindSpeed = 15, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Scooter, null);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Scooter, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -162,12 +162,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = 3, WindSpeed = 21, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tartu, VehicleTypes.Bike, null);
         
         Assert.Equal(-1, result);
     }
@@ -180,12 +180,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = -5, WindSpeed = 5, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Car, null);
+        var result = await service.CalculateFeeAsync(Cities.Tartu, VehicleTypes.Car, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -198,12 +198,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Pärnu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Pärnu"))
             .ReturnsAsync(new WeatherData { Temperature = -5, WindSpeed = 5, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Pärnu, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Pärnu, VehicleTypes.Bike, null);
         
         Assert.Equal(2.5m, result);
     }
@@ -216,12 +216,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Pärnu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Pärnu"))
             .ReturnsAsync(new WeatherData { Temperature = -11, WindSpeed = 5, Phenomenon = "Clear" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Pärnu, VehicleTypes.Scooter, null);
+        var result = await service.CalculateFeeAsync(Cities.Pärnu, VehicleTypes.Scooter, null);
         
         Assert.Equal(3.5m, result);
     }
@@ -234,12 +234,12 @@ public class DeliveryFeeServiceTests
     {
         var mockWeatherRepo = new Mock<IWeatherRepository>();
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCity("Tartu"))
+            .Setup(repo => repo.GetLatestWeatherByCityAsync("Tartu"))
             .ReturnsAsync(new WeatherData { Temperature = -2.1, WindSpeed = 4.7, Phenomenon = "Light snow shower" });
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tartu, VehicleTypes.Bike, null);
+        var result = await service.CalculateFeeAsync(Cities.Tartu, VehicleTypes.Bike, null);
         
         Assert.Equal(4, result);
     }
@@ -255,12 +255,12 @@ public class DeliveryFeeServiceTests
         var testTime = new DateTime(2024, 01, 01, 12, 00, 00);
         
         mockWeatherRepo
-            .Setup(repo => repo.GetLatestWeatherByCityAndTime(Cities.Tallinn.ToString(), testTime))
+            .Setup(repo => repo.GetLatestWeatherByCityAndTimeAsync(Cities.Tallinn.ToString(), testTime))
             .ReturnsAsync((WeatherData?)null);
 
         var service = new DeliveryFeeService(mockWeatherRepo.Object);
         
-        var result = await service.CalculateFee(Cities.Tallinn, VehicleTypes.Bike, testTime);
+        var result = await service.CalculateFeeAsync(Cities.Tallinn, VehicleTypes.Bike, testTime);
         
         Assert.Equal(-2, result);
     }

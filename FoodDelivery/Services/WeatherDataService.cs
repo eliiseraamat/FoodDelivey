@@ -37,7 +37,7 @@ public class WeatherDataService(IWeatherRepository weatherRepository, HttpClient
                     Time = DateTime.UtcNow,
                 })
                 .ToList();
-            await weatherRepository.AddWeatherData(observations);
+            await weatherRepository.AddWeatherDataAsync(observations);
         }
         catch (Exception ex)
         {
